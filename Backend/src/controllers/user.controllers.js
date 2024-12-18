@@ -3,9 +3,13 @@ import { ApiError } from "../utils/Apierrors.js";
 import { ApiResponse } from "../utils/Apiresponses.js";
 import { asynchandler } from "../utils/asynchandler.js";
 import jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
+import { uploadonCloudinary } from "../utils/cloudinary.js";
 
+//Register Controller
 const registeruser = asynchandler(async (req, res) => {
   const { fullname, email, phoneNumber, password, role } = req.body;
+  const profilePhoto = req.files?.profilePhoto;
 
   if (!fullname) throw new ApiError(400, "FullName is required");
   if (!email) throw new ApiError(400, "Email is required");
@@ -22,12 +26,23 @@ const registeruser = asynchandler(async (req, res) => {
       409,
       "User with Phone number or username already exists"
     );
+
+  let profilePhotoUrl = "";
+
+  if (profilePhoto && profilePhoto.length > 0) {
+    const profilePhotoResponse = await uploadonCloudinary(profilePhoto);
+    profilePhotoUrl = profilePhotoResponse.secure_url;
+  }
+
   const newUser = await User.create({
     fullname,
     email,
     password,
     phoneNumber,
     role,
+    profile: {
+      profilePhoto: profilePhotoUrl,
+    },
   });
 
   const createdUser = await User.findById(newUser._id).select(
@@ -50,7 +65,6 @@ const registeruser = asynchandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, createdUser, "SuccessFull Registration"));
 });
-export { register };
 
 const generateAccessandRefreshTokens = async (userid) => {
   try {
@@ -106,4 +120,96 @@ const loginUser = asynchandler(async (req, res) => {
     .json(new ApiResponse(200, updatedloggedinUser, "Logged In SuccessFully"));
 });
 
-export { registeruser, loginUser };
+const logOutUser = asynchandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User LoggedOut SuccessFully"));
+});
+
+const updateProfile = asynchandler(async (req, res) => {
+  const { fullname, bio, phoneNumber, email, skills } = req.body;
+
+  const updateData = {};
+  if (fullname) updateData.fullname = fullname;
+  if (email) updateData.email = email;
+  if (bio) updateData["profile.bio"] = bio;
+  if (phoneNumber) updateData.phoneNumber = phoneNumber;
+  if (skills) updateData["profile.skills"] = skills.split(",");
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        updateData,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+});
+
+const updateResumeAndProfilePhoto = asynchandler(async (req, res) => {
+  const userId = req.user?._id;
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { resume, profilePhoto } = req.files;
+  const updates = {};
+
+  // Upload resume file to Cloudinary
+  if (resume && resume.length > 0) {
+    const resumeResponse = await uploadonCloudinary(resume);
+    updates["profile.resume"] = resumeResponse.secure_url;
+    updates["profile.resumeOriginalName"] = resume[0].originalname;
+  }
+
+  // Upload profile photo to Cloudinary
+  if (profilePhoto && profilePhoto.length > 0) {
+    const profilePhotoResponse = await uploadonCloudinary(profilePhoto);
+    updates["profile.profilePhoto"] = profilePhotoResponse.secure_url;
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: updates },
+    { new: true }
+  );
+
+  if (!user) {
+    throw new ApiError(500, "Unable to Update the details");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Details Updated Successfully"));
+});
+
+export {
+  registeruser,
+  loginUser,
+  logOutUser,
+  updateProfile,
+  updateResumeAndProfilePhoto,
+};
