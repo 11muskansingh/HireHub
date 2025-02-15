@@ -14,7 +14,7 @@ const colors = [
 const LatestJobCards = ({ index }) => {
   return (
     <div
-      className="p-5 rounded-md shadow-xl bg-white border border-gray-100 rounded-md cursor-pointer"
+      className="p-5 rounded-md shadow-xl bg-white border border-gray-100 rounded-md cursor-pointer transform transition-transform duration-300 hover:scale-105"
       style={{ backgroundColor: colors[index % colors.length] }}
     >
       <div>
