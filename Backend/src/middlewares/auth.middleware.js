@@ -1,10 +1,10 @@
 import { ApiError } from "../utils/Apierrors.js";
 import { asynchandler } from "../utils/asynchandler.js";
-import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
+import { admin } from "../utils/FirebaseAdmin.js";
 
 //res is not used inside the function so can be replaced with a underscore
-const verifiedJWT = asynchandler(async (req, _, next) => {
+const verifyFirebaseToken = asynchandler(async (req, _, next) => {
   try {
     console.log("Cookies received:", req.cookies);
     const aToken =
@@ -15,17 +15,27 @@ const verifiedJWT = asynchandler(async (req, _, next) => {
 
     if (!aToken) throw new ApiError("401", "Unauthorised Access");
 
-    const decodedToken = jwt.verify(aToken, process.env.ACCESS_TOKEN_SECRET);
+    const decodedToken = await admin.auth().verifyIdToken(aToken);
     console.log(decodedToken);
-    const currentUser = await User.findById(decodedToken._id);
+    const firebaseUserId = decodedToken.uid;
 
-    if (!currentUser) throw new ApiError(401, "Invalid Access Token");
+    let user = await User.findOne({ firebaseUserId });
+    if (!user) {
+      // Create a new user in MongoDB if not exists
+      user = await User.create({
+        firebaseUserId,
+        email: decodedToken.email,
+        fullname: decodedToken.name,
+        phoneNumber: "",
+        role: "",
+      });
+    }
 
-    req.user = currentUser;
+    req.user = user;
     next();
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid access token");
   }
 });
 
-export { verifiedJWT };
+export { verifyFirebaseToken };

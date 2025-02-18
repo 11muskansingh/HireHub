@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { DB_NAME } from "../constants.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,10 +14,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    phoneNumber: {
-      type: Number,
-      required: true,
-    },
+    // phoneNumber: {
+    //   type: Number,
+    //   required: true,
+    // },
     password: {
       type: String,
       required: true,
@@ -80,3 +81,20 @@ userSchema.methods.generateRefreshTokens = async function () {
 };
 
 export const User = mongoose.model("User", userSchema);
+
+const dbconnect = async () => {
+  try {
+    const connectionInstance = await mongoose.connect(
+      `${process.env.DATABASE_URI}${DB_NAME}`
+    );
+    console.log(
+      `\n MongoDb connected !!!! db_HOST : ${connectionInstance.connection.host}`
+    );
+    console.log(`Server is running on port ${process.env.PORT}`);
+  } catch (error) {
+    console.log("Error in Connection", error);
+    process.exit(1);
+  }
+};
+
+export default dbconnect;
