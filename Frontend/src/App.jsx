@@ -28,6 +28,14 @@ const approuter = createBrowserRouter([
     path: "/browse",
     element: <Browse />,
   },
+  {
+    path: "/job",
+    element: <Jobs />,
+  },
+  {
+    path: "/browse",
+    element: <Browse />,
+  },
 ]);
 function App() {
   return (
