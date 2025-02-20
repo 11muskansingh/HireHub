@@ -114,7 +114,8 @@ const Signup = () => {
       formDataToSend.append("role", role);
       formDataToSend.append("googleSignUp", true);
       if (user.photoURL) {
-        formDataToSend.append("profilePhoto", user.photoURL);
+        console.log(user.photoURL);
+        formDataToSend.append("profilePhotoUrl", user.photoURL);
       }
 
       await axiosInstance.post("/users/register", formDataToSend, {

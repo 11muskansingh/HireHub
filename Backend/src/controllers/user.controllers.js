@@ -10,7 +10,7 @@ import axios from "axios";
 
 //Register Controller
 const registeruser = asynchandler(async (req, res) => {
-  const { fullname, email, password, role } = req.body;
+  const { fullname, email, password, role, profilePhotoUrl } = req.body;
   // console.log("Req.files : ", req.files);
   const profilePhoto = req.files?.profilePhoto;
 
@@ -31,16 +31,17 @@ const registeruser = asynchandler(async (req, res) => {
   console.log(`Existing User: ${existedUser}`);
   if (existedUser) throw new ApiError(409, "User with username already exists");
 
-  let profilePhotoUrl = "";
+  let finalProfilePhotoUrl = "";
   console.log("Starting to upload the image");
-
-  if (req.body.googleSignUp && profilePhoto) {
-    // Download the image from the URL and upload to Cloudinary
-    const uploadResponse = await uploadonCloudinary(profilePhoto);
-    profilePhotoUrl = uploadResponse.secure_url;
-  } else if (profilePhoto && profilePhoto.length > 0) {
+  console.log(`GoogleSignUp: ${req.body.googleSignUp}`);
+  console.log(`ProfilePhoto: ${profilePhoto}`);
+  if (req.body.googleSignUp && profilePhotoUrl) {
+    // If signing up with Google, use the provided photo URL
+    finalProfilePhotoUrl = profilePhotoUrl;
+  } else if (profilePhoto) {
+    console.log("Uploading to cloudinary...");
     const profilePhotoResponse = await uploadonCloudinary(profilePhoto);
-    profilePhotoUrl = profilePhotoResponse?.secure_url;
+    finalProfilePhotoUrl = profilePhotoResponse?.secure_url;
   }
 
   console.log(`ProfilePhoto: ${profilePhotoUrl}`);
@@ -52,7 +53,7 @@ const registeruser = asynchandler(async (req, res) => {
     password: userPassword,
     role,
     profile: {
-      profilePhoto: profilePhotoUrl,
+      profilePhoto: finalProfilePhotoUrl,
     },
   });
   if (!newUser) console.log("User not created");
@@ -97,18 +98,23 @@ const registeruser = asynchandler(async (req, res) => {
 // };
 
 const loginUser = asynchandler(async (req, res) => {
-  const { email, password } = req.body;
-
+  const { email, password, googleSignIn } = req.body;
+  console.log("Incoming request data:", req.body);
   if (!email) throw new ApiError(400, "Email is required");
-  if (!password) throw new ApiError(400, "password is required");
+  if (!googleSignIn && !password)
+    throw new ApiError(400, "password is required");
 
+  console.log("Searching for the user");
   const currentUser = await User.findOne({ email });
   console.log("current user :", currentUser);
+
   if (!currentUser) throw new ApiError(400, "Unknown User");
 
-  const correctPassword = await currentUser.isPasswordCorrect(password);
-  if (!correctPassword)
-    throw new ApiError(400, "Please enter correct password");
+  if (!googleSignIn) {
+    const correctPassword = await currentUser.isPasswordCorrect(password);
+    if (!correctPassword)
+      throw new ApiError(400, "Please enter correct password");
+  }
 
   // const { accessToken, refreshToken } = await generateAccessandRefreshTokens(
   //   currentUser._id
@@ -127,6 +133,10 @@ const loginUser = asynchandler(async (req, res) => {
   // res
   //   .cookie("accessToken", accessToken, options)
   //   .cookie("refreshToken", refreshToken, options);
+
+  // Ensure no circular references in the user object
+  const userObject = updatedloggedinUser.toObject();
+  delete userObject.__v; // Remove any unwanted fields
 
   return res
     .status(200)

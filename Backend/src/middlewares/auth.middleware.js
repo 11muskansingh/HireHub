@@ -6,6 +6,7 @@ import { admin } from "../utils/FirebaseAdmin.js";
 //res is not used inside the function so can be replaced with a underscore
 const verifyFirebaseToken = asynchandler(async (req, _, next) => {
   try {
+    console.log("Getting token from cookies");
     console.log("Cookies received:", req.cookies);
     const aToken =
       req.cookies?.accessToken ||

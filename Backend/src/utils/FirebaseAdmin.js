@@ -1,7 +1,8 @@
 import admin from "firebase-admin";
-import serviceAccount from "../config/hirehub-ea9b7-firebase-adminsdk-fbsvc-04f1327448.json" assert { type: "json" }; // Update the path to match the actual location
+import dotenv from "dotenv";
+
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(process.env.FIREBASE_CREDENTIALS),
 });
 
 export { admin };

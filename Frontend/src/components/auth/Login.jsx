@@ -1,28 +1,141 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Shared/Navbar";
 import { Label } from "../ui/label";
 import { RadioGroup } from "../ui/radio-group";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../../FireBase";
+import { useToast } from "@/hooks/use-toast";
+import axiosInstance from "@/utils/AxiosInstance";
+import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+
 const Login = () => {
+  const googleProvider = new GoogleAuthProvider();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData;
+    ({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+      const response = await axiosInstance.post(
+        "/users/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast({
+        title: "Success",
+        description: "Logged in successfully",
+        status: "success",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+      });
+      console.log(error.message);
+    }
+  };
+
+  const handleGoogleLogin = async (role) => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const token = await user.getIdToken();
+      console.log("Logged in user", user);
+
+      const response = await axiosInstance.post(
+        "/users/login",
+        {
+          email: user.email,
+          googleSignIn: true,
+          role: role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast({
+        title: "Success",
+        description: "Logged in successfully",
+        status: "success",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+      });
+      console.error(error.message);
+    }
+  };
+
   return (
     <>
       <Navbar />
       <div className="flex justify-center items-center">
         <form
-          action=""
+          onSubmit={handleSubmit}
           className="w-1/2 border border-gray-200 rounded-md p-4 my-12 shadow-md"
         >
           <h1 className="font-bold text-xl mb-5">Login</h1>
           <div className="my-2">
             <Label>Email</Label>
-            <Input type="email" name="email" placeholder="Email" />
+            <Input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="my-2">
             <Label>Password</Label>
-            <Input type="password" name="password" placeholder="Password" />
+            <Input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -32,6 +145,8 @@ const Login = () => {
                   type="radio"
                   name="role"
                   value="student"
+                  checked={formData.role === "student"}
+                  onChange={handleChange}
                   className="cursor-pointer"
                 />
                 <Label htmlFor="r1">Student</Label>
@@ -41,6 +156,8 @@ const Login = () => {
                   type="radio"
                   name="role"
                   value="recruiter"
+                  checked={formData.role === "recruiter"}
+                  onChange={handleChange}
                   className="cursor-pointer"
                 />
                 <Label htmlFor="r2">Recruiter</Label>
@@ -49,6 +166,13 @@ const Login = () => {
           </div>
           <Button type="submit" className="w-full my-4">
             Login
+          </Button>
+          <Button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full my-4 bg-white text-black flex items-center justify-center"
+          >
+            <FcGoogle className="mr-2" /> Login with Google
           </Button>
           <span className="text-sm">
             Don't have an account?{" "}
@@ -61,5 +185,4 @@ const Login = () => {
     </>
   );
 };
-
 export default Login;

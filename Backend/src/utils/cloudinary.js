@@ -1,7 +1,7 @@
 //We will assume that the files are already stored temporarily on our server. We are following the next steps.
 
 import { v2 as cloudinary } from "cloudinary";
-import axios from "axios";
+import fs from "fs"; //file system
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,30 +9,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadonCloudinary = async (file) => {
+const uploadonCloudinary = async (files) => {
   try {
-    if (!file) return null;
+    if (!files || !Array.isArray(files)) return [];
 
-    if (typeof file === "string") {
-      // Handle URL
-      const response = await axios({
-        url: file,
-        responseType: "stream",
-      });
-
-      return new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: "auto" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        );
-
-        response.data.pipe(uploadStream);
-      });
-    } else {
-      // Handle file buffer
+    // Map through each file and upload to Cloudinary
+    const uploadPromises = files.map((file) => {
       return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           { resource_type: "auto", public_id: file.originalname },
@@ -42,11 +24,18 @@ const uploadonCloudinary = async (file) => {
           }
         );
 
+        // Pipe the file buffer into the upload stream
         uploadStream.end(file.buffer);
       });
-    }
+    });
+
+    // Wait for all files to be uploaded
+    const responses = await Promise.all(uploadPromises);
+    console.log("Files uploaded successfully", responses);
+
+    return responses[0]; // Return the first file's response (URL)
   } catch (error) {
-    console.error("Error uploading file to Cloudinary:", error);
+    console.error("Error uploading files to Cloudinary:", error);
     return null;
   }
 };
