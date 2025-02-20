@@ -71,7 +71,7 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = async (role) => {
+  const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -83,7 +83,6 @@ const Login = () => {
         {
           email: user.email,
           googleSignIn: true,
-          role: role,
         },
         {
           headers: {
@@ -91,6 +90,7 @@ const Login = () => {
           },
         }
       );
+      console.log("Response from the server", response.data);
       toast({
         title: "Success",
         description: "Logged in successfully",
