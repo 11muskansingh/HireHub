@@ -98,7 +98,7 @@ const registeruser = asynchandler(async (req, res) => {
 // };
 
 const loginUser = asynchandler(async (req, res) => {
-  const { email, password, googleSignIn } = req.body;
+  const { email, password, googleSignIn, role } = req.body;
   console.log("Incoming request data:", req.body);
   if (!email) throw new ApiError(400, "Email is required");
   if (!googleSignIn && !password)
@@ -115,6 +115,9 @@ const loginUser = asynchandler(async (req, res) => {
     if (!correctPassword)
       throw new ApiError(400, "Please enter correct password");
   }
+
+  if (role !== currentUser.role)
+    throw new ApiError(400, "Account doesn't exist with this role");
 
   // const { accessToken, refreshToken } = await generateAccessandRefreshTokens(
   //   currentUser._id
@@ -143,54 +146,64 @@ const loginUser = asynchandler(async (req, res) => {
     .json(new ApiResponse(200, updatedloggedinUser, "Logged In SuccessFully"));
 });
 
-// const logOutUser = asynchandler(async (req, res) => {
-//   await User.findByIdAndUpdate(
-//     req.user._id,
-//     {
-//       $set: {
-//         refreshToken: 1,
-//       },
-//     },
-//     {
-//       new: true,
-//     }
-//   );
+const logOutUser = asynchandler(async (req, res) => {
+  const uid = req.user._id;
+  await admin.auth().revokeRefreshTokens(uid);
 
-//   const options = {
-//     httpOnly: true,
-//     secure: true,
-//     sameSite: "None",
-//   };
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    expires: new Date(0),
+  };
+  res.cookie("refreshToken", "", options);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "User LoggedOut SuccessFully"));
+});
 
-//   return res
-//     .status(200)
-//     .clearCookie("accessToken", options)
-//     .clearCookie("refreshToken", options)
-//     .json(new ApiResponse(200, {}, "User LoggedOut SuccessFully"));
-// });
+const updateProfile = asynchandler(async (req, res) => {
+  const { fullname, bio, email, skills } = req.body;
+  const files = req.files;
+  const updateData = {};
+  if (fullname) updateData.fullname = fullname;
+  if (email) updateData.email = email;
+  if (bio) updateData["profile.bio"] = bio;
+  if (skills) updateData["profile.skills"] = skills.split(",");
 
-// const updateProfile = asynchandler(async (req, res) => {
-//   const { fullname, bio, phoneNumber, email, skills } = req.body;
+  if (files && files.resume) {
+    const resumeResponse = await uploadonCloudinary(files.resume);
+    updateData["profile.resume"] = resumeResponse.secure_url;
+    updateData["profile.resumeOriginalName"] = files.resume[0].originalname;
+  }
 
-//   const updateData = {};
-//   if (fullname) updateData.fullname = fullname;
-//   if (email) updateData.email = email;
-//   if (bio) updateData["profile.bio"] = bio;
-//   if (phoneNumber) updateData.phoneNumber = phoneNumber;
-//   if (skills) updateData["profile.skills"] = skills.split(",");
+  if (files && files.profilePhoto) {
+    const profilePhotoResponse = await uploadonCloudinary(
+      files.profilePhoto[0]
+    );
+    updateData["profile.profilePhoto"] = profilePhotoResponse.secure_url;
+  }
 
-//   const user = await User.findByIdAndUpdate(
-//     req.user?._id,
-//     {
-//       $set: {
-//         updateData,
-//       },
-//     },
-//     {
-//       new: true,
-//     }
-//   );
-// });
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        updateData,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Profile updated successfully"));
+});
 
 // const updateResumeAndProfilePhoto = asynchandler(async (req, res) => {
 //   const userId = req.user?._id;
@@ -232,7 +245,7 @@ const loginUser = asynchandler(async (req, res) => {
 export {
   registeruser,
   loginUser,
-  // logOutUser,
-  // updateProfile,
+  logOutUser,
+  updateProfile,
   // updateResumeAndProfilePhoto,
 };

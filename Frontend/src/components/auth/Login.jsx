@@ -15,11 +15,15 @@ import { useToast } from "@/hooks/use-toast";
 import axiosInstance from "@/utils/AxiosInstance";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading, setUser } from "@/redux/authslice";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const googleProvider = new GoogleAuthProvider();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -27,14 +31,15 @@ const Login = () => {
     role: "",
   });
 
+  const { loading, user } = useSelector((store) => store.auth);
   const handleChange = (e) => {
-    setFormData;
-    ({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      dispatch(setLoading(true));
       const userCredential = await signInWithEmailAndPassword(
         auth,
         formData.email,
@@ -47,6 +52,7 @@ const Login = () => {
         {
           email: formData.email,
           password: formData.password,
+          role: formData.role,
         },
         {
           headers: {
@@ -54,7 +60,8 @@ const Login = () => {
           },
         }
       );
-
+      console.log(response);
+      dispatch(setUser(response.data.data));
       toast({
         title: "Success",
         description: "Logged in successfully",
@@ -68,10 +75,12 @@ const Login = () => {
         status: "error",
       });
       console.log(error.message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (role) => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -83,6 +92,7 @@ const Login = () => {
         {
           email: user.email,
           googleSignIn: true,
+          role: role,
         },
         {
           headers: {
@@ -90,7 +100,8 @@ const Login = () => {
           },
         }
       );
-      console.log("Response from the server", response.data);
+      console.log(response);
+      dispatch(setUser(response.data.data));
       toast({
         title: "Success",
         description: "Logged in successfully",
@@ -164,15 +175,35 @@ const Login = () => {
               </div>
             </RadioGroup>
           </div>
-          <Button type="submit" className="w-full my-4">
-            Login
-          </Button>
+          {loading ? (
+            <Button className="w-full my-4">
+              {" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full my-4">
+              Login
+            </Button>
+          )}
+
           <Button
             type="button"
-            onClick={handleGoogleLogin}
+            onClick={() => {
+              handleGoogleLogin("student");
+            }}
             className="w-full my-4 bg-white text-black flex items-center justify-center"
           >
-            <FcGoogle className="mr-2" /> Login with Google
+            <FcGoogle className="mr-2" /> Login with Google (Student)
+          </Button>
+
+          <Button
+            type="button"
+            onClick={() => {
+              handleGoogleLogin("recruiter");
+            }}
+            className="w-full my-4 bg-white text-black flex items-center justify-center"
+          >
+            <FcGoogle className="mr-2" /> Login with Google (Recruiter)
           </Button>
           <span className="text-sm">
             Don't have an account?{" "}

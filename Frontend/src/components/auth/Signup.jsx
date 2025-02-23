@@ -15,11 +15,15 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading, setUser } from "@/redux/authslice";
+import { Loader2 } from "lucide-react";
 
 const Signup = () => {
   const googleProvider = new GoogleAuthProvider();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = React.useState({
     fullname: "",
@@ -29,7 +33,7 @@ const Signup = () => {
     role: "",
     profilePhoto: "",
   });
-
+  const { loading, user } = useSelector((store) => store.auth);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -41,6 +45,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       // Check if email is already in use
+      dispatch(setLoading(true));
       const signInMethods = await fetchSignInMethodsForEmail(
         auth,
         formData.email
@@ -78,18 +83,24 @@ const Signup = () => {
       //   console.log(`${key}: ${value}`);
       // }
 
-      await axiosInstance.post("/users/register", formDataToSend, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.post(
+        "/users/register",
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      dispatch(setUser(response.data.data));
+      navigate("/");
       toast({
         title: "Success",
         description: "User Registered Successfully",
         status: "success",
       });
-      navigate("/");
     } catch (error) {
       toast({
         title: "Error",
@@ -97,6 +108,8 @@ const Signup = () => {
         status: "error",
       });
       console.error(error.message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -118,12 +131,19 @@ const Signup = () => {
         formDataToSend.append("profilePhotoUrl", user.photoURL);
       }
 
-      await axiosInstance.post("/users/register", formDataToSend, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.post(
+        "/users/register",
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      dispatch(setUser(response.data.data));
+      navigate("/");
       toast({
         title: "Success",
         description: "User Registered Successfully",
@@ -226,9 +246,17 @@ const Signup = () => {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full my-4">
-            Signup
-          </Button>
+          {loading ? (
+            <Button className="w-full my-4">
+              {" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full my-4">
+              Signup
+            </Button>
+          )}
+
           <div className="flex flex-col items-center justify-center">
             <Button
               type="button"
