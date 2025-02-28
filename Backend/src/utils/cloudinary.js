@@ -13,27 +13,28 @@ const uploadonCloudinary = async (files) => {
   try {
     if (!files || !Array.isArray(files)) return [];
 
-    // Map through each file and upload to Cloudinary
     const uploadPromises = files.map((file) => {
       return new Promise((resolve, reject) => {
+        const resourceType = file.mimetype.startsWith("image")
+          ? "image"
+          : "raw";
+
         const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: "auto", public_id: file.originalname },
+          { resource_type: resourceType, public_id: file.originalname },
           (error, result) => {
             if (error) reject(error);
             else resolve(result);
           }
         );
 
-        // Pipe the file buffer into the upload stream
         uploadStream.end(file.buffer);
       });
     });
 
-    // Wait for all files to be uploaded
     const responses = await Promise.all(uploadPromises);
-    console.log("Files uploaded successfully", responses);
+    console.log("Files uploaded successfully:", responses);
 
-    return responses[0]; // Return the first file's response (URL)
+    return responses.length === 1 ? responses[0] : responses; // Return URLs of all uploaded files
   } catch (error) {
     console.error("Error uploading files to Cloudinary:", error);
     return null;

@@ -129,9 +129,7 @@ const loginUser = asynchandler(async (req, res) => {
   //   httpOnly: true,
   // };
 
-  const updatedloggedinUser = await User.findById(currentUser._id).select(
-    "-password -refreshTokens"
-  );
+  const updatedloggedinUser = currentUser;
   console.log(updatedloggedinUser);
   // res
   //   .cookie("accessToken", accessToken, options)
@@ -163,46 +161,66 @@ const logOutUser = asynchandler(async (req, res) => {
 });
 
 const updateProfile = asynchandler(async (req, res) => {
-  const { fullname, bio, email, skills } = req.body;
+  const { fullname, bio, email, skills, phoneNumber } = req.body;
+  console.log("Incoming request body:", req.body);
   const files = req.files;
+  console.log("Incoming request files:", req.files.resume);
   const updateData = {};
   if (fullname) updateData.fullname = fullname;
   if (email) updateData.email = email;
   if (bio) updateData["profile.bio"] = bio;
   if (skills) updateData["profile.skills"] = skills.split(",");
+  if (phoneNumber) updateData["profile.phoneNumber"] = phoneNumber;
 
   if (files && files.resume) {
-    const resumeResponse = await uploadonCloudinary(files.resume);
-    updateData["profile.resume"] = resumeResponse.secure_url;
-    updateData["profile.resumeOriginalName"] = files.resume[0].originalname;
-  }
+    const resumeResponses = await uploadonCloudinary(files.resume);
 
-  if (files && files.profilePhoto) {
-    const profilePhotoResponse = await uploadonCloudinary(
-      files.profilePhoto[0]
-    );
-    updateData["profile.profilePhoto"] = profilePhotoResponse.secure_url;
+    if (resumeResponses && resumeResponses.secure_url) {
+      console.log("Resume uploaded successfully", resumeResponses.secure_url);
+      updateData["profile.resume"] = resumeResponses.secure_url;
+      updateData["profile.resumeOriginalName"] = files.resume[0].originalname;
+    } else if (Array.isArray(resumeResponses) && resumeResponses.length > 0) {
+      console.log(
+        "Resume uploaded successfully",
+        resumeResponses[0].secure_url
+      );
+      updateData["profile.resume"] = resumeResponses[0].secure_url;
+      updateData["profile.resumeOriginalName"] = files.resume[0].originalname;
+    } else {
+      console.log(
+        "Failed to get secure_url from Cloudinary response:",
+        resumeResponses
+      );
+    }
   }
+  // if (files && files.profilePhoto && files.profilePhoto[0]) {
+  //   const profilePhotoResponse = await uploadonCloudinary(
+  //     files.profilePhoto[0]
+  //   );
+  //   if (profilePhotoResponse) {
+  //     updateData["profile.profilePhoto"] = profilePhotoResponse.secure_url;
+  //   }
+  // }
 
+  console.log(`Data: ${JSON.stringify(updateData)}`);
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
-      $set: {
-        updateData,
-      },
+      $set: updateData,
     },
-    {
-      new: true,
-    }
+    {}
   );
 
   if (!user) {
     throw new ApiError(404, "User not found");
   }
+  const newUser = await User.findById(req.user?._id).select(
+    "-password -refreshTokens"
+  );
 
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "Profile updated successfully"));
+    .json(new ApiResponse(200, newUser, "Profile updated successfully"));
 });
 
 // const updateResumeAndProfilePhoto = asynchandler(async (req, res) => {

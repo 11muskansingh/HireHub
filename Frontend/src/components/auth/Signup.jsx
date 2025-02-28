@@ -16,7 +16,7 @@ import {
 } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser } from "@/redux/authslice";
+import { setLoading, setUser, setToken } from "@/redux/authslice";
 import { Loader2 } from "lucide-react";
 
 const Signup = () => {
@@ -93,6 +93,7 @@ const Signup = () => {
           },
         }
       );
+      dispatch(setToken(token));
       console.log(response);
       dispatch(setUser(response.data.data));
       navigate("/");
@@ -141,6 +142,7 @@ const Signup = () => {
           },
         }
       );
+      dispatch(setToken(token));
       console.log(response);
       dispatch(setUser(response.data.data));
       navigate("/");

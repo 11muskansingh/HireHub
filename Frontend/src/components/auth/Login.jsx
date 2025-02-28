@@ -16,7 +16,7 @@ import axiosInstance from "@/utils/AxiosInstance";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser } from "@/redux/authslice";
+import { setLoading, setUser, setToken } from "@/redux/authslice";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
@@ -60,6 +60,7 @@ const Login = () => {
           },
         }
       );
+      console.log(token);
       console.log(response);
       dispatch(setUser(response.data.data));
       toast({
@@ -67,6 +68,7 @@ const Login = () => {
         description: "Logged in successfully",
         status: "success",
       });
+      dispatch(setToken(token));
       navigate("/");
     } catch (error) {
       toast({
@@ -100,6 +102,8 @@ const Login = () => {
           },
         }
       );
+      console.log(token);
+      dispatch(setToken(token));
       console.log(response);
       dispatch(setUser(response.data.data));
       toast({

@@ -27,4 +27,9 @@ app.get("/", (req, res) => {
 import userRouter from "./routes/user.routes.js";
 app.use("/api/v1/users", userRouter);
 
+import jobRouter from "./routes/job.routes.js";
+app.use("/api/v1/jobs", jobRouter);
+
+import companyRouter from "./routes/company.routes.js";
+app.use("/api/v1/companies", companyRouter);
 export { app };
