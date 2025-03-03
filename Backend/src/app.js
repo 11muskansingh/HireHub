@@ -32,4 +32,7 @@ app.use("/api/v1/jobs", jobRouter);
 
 import companyRouter from "./routes/company.routes.js";
 app.use("/api/v1/companies", companyRouter);
+
+import applicationRouter from "./routes/application.routes.js";
+app.use("/api/v1/applications", applicationRouter);
 export { app };
