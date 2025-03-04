@@ -10,7 +10,7 @@ import { verifyFirebaseToken } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.route("/postjob").post(verifyFirebaseToken, postJob);
-router.route("/all").get(verifyFirebaseToken, getAllJobs);
+router.route("/all").get(getAllJobs);
 router.route("/:id").get(verifyFirebaseToken, getJobById);
 
 export default router;

@@ -14,7 +14,7 @@ const router = Router();
 router.route("/postcompany").post(verifyFirebaseToken, postCompany);
 router
   .route("/:companyId")
-  .put(verifyFirebaseToken, upload.single("logo"), updateCompany);
+  .put(verifyFirebaseToken, upload.single("file"), updateCompany);
 
 router.route("/c/:companyId").get(verifyFirebaseToken, getCompanyById);
 

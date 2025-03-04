@@ -7,6 +7,11 @@ import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
 import { Toaster } from "./components/ui/toaster";
+import JobDescription from "./components/JobDescription";
+import Companies from "./components/admin/Companies";
+import CompanyCreate from "./components/admin/CompanyCreate";
+import CompanySetup from "./components/admin/CompanySetup";
+import AdminJobs from "./components/admin/AdminJobs";
 
 const approuter = createBrowserRouter([
   {
@@ -22,24 +27,46 @@ const approuter = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: "/job",
+    path: "/jobs",
     element: <Jobs />,
   },
   {
     path: "/browse",
     element: <Browse />,
   },
-  {
-    path: "/job",
-    element: <Jobs />,
-  },
-  {
-    path: "/browse",
-    element: <Browse />,
-  },
+  // {
+  //   path: "/job",
+  //   element: <Jobs />,
+  // },
+  // {
+  //   path: "/browse",
+  //   element: <Browse />,
+  // },
   {
     path: "/profile",
     element: <Profile />,
+  },
+  {
+    path: "/description/:id",
+    element: <JobDescription />,
+  },
+
+  //FOR ADMIN
+  {
+    path: "/admin/companies",
+    element: <Companies />,
+  },
+  {
+    path: "/admin/companies/create",
+    element: <CompanyCreate />,
+  },
+  {
+    path: "/admin/companies/:id",
+    element: <CompanySetup />,
+  },
+  {
+    path: "/admin/jobs",
+    element: <AdminJobs />,
   },
 ]);
 function App() {

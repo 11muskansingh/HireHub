@@ -21,12 +21,13 @@ const Navbar = () => {
       dispatch(setLoading(true));
       await signOut(auth);
       dispatch(setUser(null));
+      navigate("/");
+      // persister.purge();
       toast({
         title: "Success",
         description: "Logged out successfully",
         status: "success",
       });
-      navigate("/");
     } catch (error) {
       toast({
         title: "Error",

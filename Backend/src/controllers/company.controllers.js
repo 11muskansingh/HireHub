@@ -34,22 +34,32 @@ const postCompany = asynchandler(async (req, res) => {
 const updateCompany = asynchandler(async (req, res) => {
   const { description, website, location } = req.body;
   console.log("files", req.file);
-  const { logo } = req.file;
+  const logo = req.file;
+  console.log("Logo is: ", logo);
 
   if (!description || !website || !location)
     throw new ApiError(401, "All the fields are required");
 
   let logoURL;
   if (logo) {
-    const logoResponse = await uploadonCloudinary(logo);
-    logoURL = logoResponse?.secure_URL;
+    const logoResponse = await uploadonCloudinary([logo]);
+    console.log("Logo Response", logoResponse);
+    logoURL = logoResponse?.secure_url;
+    console.log("Logo URL", logoURL);
   }
-  const updatedData = { description, website, location, logoURL };
+  const updatedData = { description, website, location };
+  if (logoURL) {
+    updatedData.logo = logoURL;
+  }
   const { companyId } = req.params;
 
-  const updatedCompany = await Company.findByIdAndUpdate(companyId, {
-    $set: updatedData,
-  });
+  const updatedCompany = await Company.findByIdAndUpdate(
+    companyId,
+    {
+      $set: updatedData,
+    },
+    { new: true }
+  );
 
   if (!updatedCompany)
     throw new ApiError(500, "Unable to Update the file Details");
@@ -82,10 +92,10 @@ const getUserCompanies = asynchandler(async (req, res) => {
 
   if (!userId) throw new ApiError(401, "UserId is Required");
 
-  const user = await User.findById(userId).populate("profile.company").lean();
-  if (!user) throw new ApiError(401, "User Not Found");
+  // const user = await User.findById(userId).populate("profile.company").lean();
+  // if (!user) throw new ApiError(401, "User Not Found");
 
-  const companies = await Company.find({ userId: user._id }).lean();
+  const companies = await Company.find({ userId });
   if (!companies) throw new ApiError("401", "Unable to fetch companies");
 
   return res
