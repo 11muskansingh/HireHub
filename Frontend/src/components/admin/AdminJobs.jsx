@@ -7,14 +7,17 @@ import CompaniesTable from "./CompaniesTable";
 import { setSearchCompanyByText } from "@/redux/companySlice";
 import { useDispatch } from "react-redux";
 import AdminJobsTable from "./AdminJobsTable";
+import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs";
+import { setSearchJobByText } from "@/redux/jobSlice";
+
 const AdminJobs = () => {
-  // useGetAllCompanies();
+  useGetAllAdminJobs();
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setSearchCompanyByText(input));
+    dispatch(setSearchJobByText(input));
   }, [input]);
   return (
     <div>

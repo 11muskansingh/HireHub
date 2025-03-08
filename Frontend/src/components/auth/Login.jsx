@@ -45,8 +45,10 @@ const Login = () => {
         formData.email,
         formData.password
       );
+
       const user = userCredential.user;
       const token = await user.getIdToken();
+      console.log(token);
       const response = await axiosInstance.post(
         "/users/login",
         {
@@ -60,7 +62,7 @@ const Login = () => {
           },
         }
       );
-      console.log(token);
+
       console.log(response);
       dispatch(setUser(response.data.data));
       toast({

@@ -6,6 +6,8 @@ import { User } from "../models/user.model.js";
 import { Company } from "../models/company.model.js";
 
 const postJob = asynchandler(async (req, res) => {
+  console.log("posting job");
+  console.log("Req.body is ", req.body);
   const {
     description,
     title,
@@ -14,7 +16,7 @@ const postJob = asynchandler(async (req, res) => {
     experience,
     location,
     jobType,
-    company,
+    companyId,
     position,
   } = req.body;
   if (
@@ -25,19 +27,23 @@ const postJob = asynchandler(async (req, res) => {
     !experience ||
     !location ||
     !jobType ||
-    !company ||
+    !companyId ||
     !position
   ) {
     throw new ApiError(400, "All fields are required");
   }
+  console.log("Got all the data");
   const user = await User.findById(req.user._id);
   if (!user) {
     throw new ApiError(400, "User not found");
   }
-  const newCompany = await Company.findOne({ name: company });
-  if (!newCompany) {
-    throw new ApiError(400, "Company not found");
-  }
+  console.log("User", user);
+
+  // const newCompany = await Company.findById(companyId);
+  // if (!newCompany) {
+  //   throw new ApiError(400, "Company not found");
+  // }
+  // console.log("Company", newCompany);
 
   const newJob = await Job.create({
     description: description,
@@ -48,13 +54,14 @@ const postJob = asynchandler(async (req, res) => {
     location: location,
     jobType: jobType,
     position: position,
-    company: newCompany._id,
+    company: companyId,
     created_by: req.user._id,
   }); // Create a new job
 
   if (!newJob) {
     throw new ApiError(400, "Job not created");
   }
+  console.log("New jOB", newJob);
   return res
     .status(200)
     .json(new ApiResponse(200, newJob, "Job created Successfully"));
@@ -102,4 +109,23 @@ const getJobById = asynchandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, job, "Job"));
 });
 
-export { postJob, getAllJobs, getJobById };
+const getAdminJobs = asynchandler(async (req, res) => {
+  //console.log("first");
+  //console.log("My user is", req);
+  const adminId = req.user._id;
+  //console.log("Admin id", adminId);
+  const jobs = await Job.find({ created_by: adminId }).populate({
+    path: "company",
+    model: "Company",
+    match: {}, // Ensures it tries to populate even if null
+  });
+  // console.log("populated jobs", jobs);
+  if (!jobs) {
+    return new ApiError(500, "Jobs not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, jobs, "Admin Jobs Fetched Successfully"));
+});
+
+export { postJob, getAllJobs, getJobById, getAdminJobs };

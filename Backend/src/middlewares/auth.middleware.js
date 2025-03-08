@@ -27,6 +27,7 @@ const verifyFirebaseToken = asynchandler(async (req, _, next) => {
     }
     // console.log("The user is ", user);clear
     req.user = user;
+    //console.log("Pass ho gya");
     next();
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid access token");

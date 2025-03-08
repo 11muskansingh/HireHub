@@ -34,4 +34,44 @@ const applyJob = asynchandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, newApplication, "Applied Successfully"));
 });
-export { applyJob };
+
+const getApplicants = asynchandler(async (req, res) => {
+  const jobId = req.params;
+  if (!jobId) throw new ApiError(401, "Job Id is Required");
+
+  const applicants = await Job.findById(jobId).populate({
+    path: "applications",
+    options: { sort: { createdAt: -1 } },
+    populate: {
+      path: "applicant",
+    },
+  });
+
+  if (!applicants) throw new ApiError(500, "Error fetching Applicants");
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, applicants, "All applicants fetched successfully")
+    );
+});
+
+const getAppliedJobs = asynchandler(async (req, res) => {
+  const userId = req.user._id;
+  const application = await Application.find({ applicant: userId })
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "job",
+      options: { sort: { createdAt: -1 } },
+      populate: {
+        path: "company",
+        options: { sort: { createdAt: -1 } },
+      },
+    });
+
+  if (!application) throw new ApiError(500, "Error getting jobs");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, application, "Fetched all applied Jobs"));
+});
+
+export { applyJob, getApplicants, getAppliedJobs };
