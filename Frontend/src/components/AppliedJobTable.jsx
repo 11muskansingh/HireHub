@@ -26,7 +26,7 @@ const AppliedJobTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allAppliedJobs.length <= 0 ? (
+          {allAppliedJobs && allAppliedJobs.length <= 0 ? (
             <span>You haven't applied any job yet.</span>
           ) : (
             allAppliedJobs.map((appliedJob) => (

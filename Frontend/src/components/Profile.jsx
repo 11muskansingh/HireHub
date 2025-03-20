@@ -9,7 +9,10 @@ import AppliedJobTable from "./AppliedJobTable";
 import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
+import useGetAppliedJobs from "@/hooks/useGetAppliedJobs";
+
 const Profile = () => {
+  useGetAppliedJobs();
   const { user } = useSelector((store) => store.auth);
   const [open, setOpen] = useState(false);
   const isResume = user?.profile?.resume ? true : false;
