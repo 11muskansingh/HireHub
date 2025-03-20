@@ -14,7 +14,11 @@ const Applicants = () => {
   useEffect(() => {
     const fetchAllApplicants = async () => {
       try {
-        const res = await axiosInstance.get();
+        const id = params.id;
+        const res = await axiosInstance.get(
+          `/applications/allApplicants/${id}`
+        );
+        console.log("Applicants Response", res);
         dispatch(setAllApplicants(res.data.data));
       } catch (error) {
         console.log(error);
@@ -27,7 +31,7 @@ const Applicants = () => {
       <Navbar />
       <div className="max-w-7xl mx-auto">
         <h1 className="font-bold text-xl my-5">
-          Applicants {applicants?.applications?.length}
+          Applicants ({applicants?.applications?.length})
         </h1>
         <ApplicantsTable />
       </div>

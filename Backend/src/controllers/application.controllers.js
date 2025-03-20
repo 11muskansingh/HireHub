@@ -36,7 +36,8 @@ const applyJob = asynchandler(async (req, res) => {
 });
 
 const getApplicants = asynchandler(async (req, res) => {
-  const jobId = req.params;
+  //console.log("Get Applicants started");
+  const { id: jobId } = req.params;
   if (!jobId) throw new ApiError(401, "Job Id is Required");
 
   const applicants = await Job.findById(jobId).populate({
@@ -74,4 +75,24 @@ const getAppliedJobs = asynchandler(async (req, res) => {
     .json(new ApiResponse(200, application, "Fetched all applied Jobs"));
 });
 
-export { applyJob, getApplicants, getAppliedJobs };
+const statusUpdate = asynchandler(async (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+  if (!status) {
+    throw new ApiError(400, "Status is required.");
+  }
+
+  const application = await Application.findOne({ _id: id });
+  if (!application) {
+    throw new ApiError(404, "Application not found.");
+  }
+
+  application.status = status.toLowerCase();
+  await application.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, application, "Status Updated Successfully"));
+});
+
+export { applyJob, getApplicants, getAppliedJobs, statusUpdate };
