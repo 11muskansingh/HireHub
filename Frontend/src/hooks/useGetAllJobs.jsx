@@ -1,14 +1,17 @@
 import axiosInstance from "@/utils/AxiosInstance";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setAllJobs } from "@/redux/jobSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setAllJobs, setSearchedQuery } from "@/redux/jobSlice";
 
 const useGetAllJobs = () => {
   const dispatch = useDispatch();
-
+  const { searchedQuery } = useSelector((store) => store.job);
   const fetchAllJobs = async () => {
     try {
-      const response = await axiosInstance.get("/jobs/all");
+      const endpoint = searchedQuery
+        ? `/jobs/all?keyword=${searchedQuery}`
+        : `/jobs/all`;
+      const response = await axiosInstance.get(endpoint);
       console.log(response);
       dispatch(setAllJobs(response.data.data));
     } catch (error) {
@@ -18,6 +21,11 @@ const useGetAllJobs = () => {
 
   useEffect(() => {
     fetchAllJobs();
+  }, [searchedQuery]);
+  useEffect(() => {
+    return () => {
+      dispatch(setSearchedQuery(""));
+    };
   }, []);
   return null;
 };

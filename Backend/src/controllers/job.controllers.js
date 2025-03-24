@@ -68,13 +68,18 @@ const postJob = asynchandler(async (req, res) => {
 });
 
 const getAllJobs = asynchandler(async (req, res) => {
-  const keyword = req.query.keyword || "";
-  const query = {
-    $or: [
-      { title: { $regex: keyword, $options: "i" } },
-      { description: { $regex: keyword, $options: "i" } },
-    ],
-  };
+  const keyword = req.query.keyword;
+  console.log("Keyword=>", keyword);
+  let query = {};
+
+  if (keyword) {
+    query = {
+      $or: [
+        { title: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    };
+  }
   const jobs = await Job.find(query)
     .populate({
       path: "company",
@@ -83,6 +88,7 @@ const getAllJobs = asynchandler(async (req, res) => {
   if (!jobs) {
     throw new ApiError(404, "No jobs found");
   }
+  console.log("Jobs", jobs);
 
   return res.status(200).json(new ApiResponse(200, jobs, "All jobs"));
 });

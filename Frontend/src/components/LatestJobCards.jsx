@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const colors = [
   "#f0f4f8",
@@ -12,8 +13,10 @@ const colors = [
 ];
 
 const LatestJobCards = ({ index, job }) => {
+  const navigate = useNavigate();
   return (
     <div
+      onClick={() => navigate(`/description/${job._id}`)}
       className="p-5 rounded-md shadow-xl bg-white border border-gray-100 rounded-md cursor-pointer transform transition-transform duration-300 hover:scale-105"
       style={{ backgroundColor: colors[index % colors.length] }}
     >
