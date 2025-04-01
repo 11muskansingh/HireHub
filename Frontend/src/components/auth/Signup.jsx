@@ -18,7 +18,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser, setToken } from "@/redux/authslice";
 import { Loader2 } from "lucide-react";
-
 const Signup = () => {
   const googleProvider = new GoogleAuthProvider();
   const navigate = useNavigate();
@@ -163,12 +162,12 @@ const Signup = () => {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center max-w-7xl mx-auto">
+      <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full overflow-hidden">
         <form
           onSubmit={handleSubmit}
-          className="w-1/2 border border-gray-200 rounded-md p-4 my-10 shadow-md"
+          className="w-full max-w-md border border-gray-200 rounded-md p-4 sm:p-6 my-6 sm:my-10 shadow-md"
         >
-          <h1 className="font-bold text-xl mb-5">Sign Up</h1>
+          <h1 className="font-bold text-xl mb-5 text-center">Sign Up</h1>
           <div className="my-2">
             <Label>Full Name</Label>
             <Input
@@ -212,8 +211,9 @@ const Signup = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="flex items-center justify-between">
-            <RadioGroup className="flex items-center gap-4 my-5">
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <RadioGroup className="flex flex-col sm:flex-row items-center gap-4 my-5">
               <div className="flex items-center space-x-2">
                 <Input
                   type="radio"
@@ -237,7 +237,7 @@ const Signup = () => {
                 <Label htmlFor="r2">Recruiter</Label>
               </div>
             </RadioGroup>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
               <Label>Profile</Label>
               <Input
                 accept="image/*"
@@ -248,10 +248,10 @@ const Signup = () => {
               />
             </div>
           </div>
+
           {loading ? (
             <Button className="w-full my-4">
-              {" "}
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
             </Button>
           ) : (
             <Button type="submit" className="w-full my-4">
@@ -275,7 +275,7 @@ const Signup = () => {
               <FcGoogle className="mr-2" /> Sign Up with Google (Recruiter)
             </Button>
           </div>
-          <span className="text-sm">
+          <span className="text-sm block text-center">
             Already have an account?{" "}
             <Link to="/login" className="text-rose-700">
               Login

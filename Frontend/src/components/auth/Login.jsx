@@ -127,12 +127,12 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center px-4">
         <form
           onSubmit={handleSubmit}
-          className="w-1/2 border border-gray-200 rounded-md p-4 my-12 shadow-md"
+          className="w-full max-w-md border border-gray-200 rounded-md p-4 my-12 shadow-md"
         >
-          <h1 className="font-bold text-xl mb-5">Login</h1>
+          <h1 className="font-bold text-xl mb-5 text-center">Login</h1>
           <div className="my-2">
             <Label>Email</Label>
             <Input
@@ -155,8 +155,8 @@ const Login = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <RadioGroup className="flex items-center gap-4 my-5">
+          <div className="flex flex-col items-start gap-4 my-5">
+            <RadioGroup className="flex flex-col sm:flex-row items-center gap-4">
               <div className="flex items-center space-x-2">
                 <Input
                   type="radio"
@@ -181,10 +181,10 @@ const Login = () => {
               </div>
             </RadioGroup>
           </div>
+
           {loading ? (
             <Button className="w-full my-4">
-              {" "}
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
             </Button>
           ) : (
             <Button type="submit" className="w-full my-4">
@@ -211,7 +211,7 @@ const Login = () => {
           >
             <FcGoogle className="mr-2" /> Login with Google (Recruiter)
           </Button>
-          <span className="text-sm">
+          <span className="text-sm block text-center">
             Don't have an account?{" "}
             <Link to="/signup" className="text-blue-600">
               Signup
