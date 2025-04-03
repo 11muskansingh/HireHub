@@ -1,6 +1,6 @@
 import React from "react";
-import Navbar from "./Shared/Navbar";
-import Job from "./Job";
+import Navbar from "./Shared/Navbar.jsx";
+import Job from "./Job.jsx";
 import { useSelector } from "react-redux";
 const colors = [
   "#f0f4f8",

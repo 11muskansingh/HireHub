@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import Navbar from "../shared/Navbar";
-import ApplicantsTable from "./ApplicantsTable";
+import Navbar from "../shared/Navbar.jsx";
+import ApplicantsTable from "./ApplicantsTable.jsx";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setAllApplicants } from "@/redux/applicationSlice.js";
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 
 const Applicants = () => {
   const params = useParams();

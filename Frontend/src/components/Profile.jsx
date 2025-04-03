@@ -1,15 +1,15 @@
 import React from "react";
-import Navbar from "./Shared/Navbar";
+import Navbar from "./Shared/Navbar.jsx";
 import { Contact, Mail, Pen } from "lucide-react";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Label } from "./ui/label";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
-import AppliedJobTable from "./AppliedJobTable";
-import UpdateProfileDialog from "./UpdateProfileDialog";
+import AppliedJobTable from "./AppliedJobTable.jsx";
+import UpdateProfileDialog from "./UpdateProfileDialog.jsx";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
-import useGetAppliedJobs from "@/hooks/useGetAppliedJobs";
+import useGetAppliedJobs from "@/hooks/useGetAppliedJobs.jsx";
 
 const Profile = () => {
   useGetAppliedJobs();

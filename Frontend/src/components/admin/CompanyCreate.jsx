@@ -5,10 +5,10 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setSingleCompany } from "@/redux/companySlice";
+import { setSingleCompany } from "@/redux/companySlice.js";
 import { toast } from "@/hooks/use-toast";
 import { useToast } from "@/hooks/use-toast";
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 
 const CompanyCreate = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../Shared/Navbar";
+import Navbar from "../Shared/Navbar.jsx";
 import { Label } from "../ui/label";
 import { RadioGroup } from "../ui/radio-group";
 import { Input } from "../ui/input";
@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { auth } from "../../FireBase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import axiosInstance from "../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance.jsx";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import {

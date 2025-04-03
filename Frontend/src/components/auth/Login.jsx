@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../Shared/Navbar";
+import Navbar from "../Shared/Navbar.jsx";
 import { Label } from "../ui/label";
 import { RadioGroup } from "../ui/radio-group";
 import { Input } from "../ui/input";
@@ -12,7 +12,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../../FireBase";
 import { useToast } from "@/hooks/use-toast";
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../shared/Navbar";
+import Navbar from "../shared/Navbar.jsx";
 import { Button } from "../ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 import { toast } from "@/hooks/use-toast";
 import useGetCompanyById from "@/hooks/useGetCompanyById";
 

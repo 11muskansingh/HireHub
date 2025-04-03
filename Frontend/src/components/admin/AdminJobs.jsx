@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../Shared/Navbar";
+import Navbar from "../Shared/Navbar.jsx";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import CompaniesTable from "./CompaniesTable";
 import { setSearchCompanyByText } from "@/redux/companySlice";
 import { useDispatch } from "react-redux";
-import AdminJobsTable from "./AdminJobsTable";
-import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs";
-import { setSearchJobByText } from "@/redux/jobSlice";
+import AdminJobsTable from "./AdminJobsTable.jsx";
+import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs.jsx";
+import { setSearchJobByText } from "@/redux/jobSlice.js";
 
 const AdminJobs = () => {
   useGetAllAdminJobs();

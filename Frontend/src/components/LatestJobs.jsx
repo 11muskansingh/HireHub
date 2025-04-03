@@ -1,5 +1,5 @@
 import React from "react";
-import LatestJobCards from "./LatestJobCards";
+import LatestJobCards from "./LatestJobCards.jsx";
 import { useSelector } from "react-redux";
 
 //const randomJobs = [1, 2, 3, 4, 5, 6, 7, 8];

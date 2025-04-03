@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FilterCard from "./FilterCard";
-import Job from "./Job";
-import Navbar from "./Shared/Navbar";
+import Job from "./Job.jsx";
+import Navbar from "./Shared/Navbar.jsx";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 

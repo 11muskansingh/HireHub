@@ -3,10 +3,10 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 import { useToast } from "@/hooks/use-toast";
-import { setSingleJob } from "@/redux/jobSlice";
-import Navbar from "./Shared/Navbar";
+import { setSingleJob } from "@/redux/jobSlice.js";
+import Navbar from "./Shared/Navbar.jsx";
 
 const JobDescription = () => {
   const params = useParams();
