@@ -1,7 +1,7 @@
 import { setAllAppliedJobs } from "@/redux/jobSlice.js";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import axiosInstance from "@/utils/AxiosInstance,jsx";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 
 const useGetAppliedJobs = () => {
   const dispatch = useDispatch();
