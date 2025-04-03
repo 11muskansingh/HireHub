@@ -19,14 +19,14 @@ const HeroSection = () => {
     <div className="text-center px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-5 my-10">
         {/* Tagline */}
-        <span className="mx-auto px-4 py-2 rounded-full bg-gray-100 text-[#6A38C2] font-medium text-sm sm:text-base">
+        <span className="mx-auto px-4 py-2 rounded-full bg-gray-100 text-[#0d7cab] font-medium text-sm sm:text-base">
           No. 1 Job Hunt Website
         </span>
 
         {/* Heading */}
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
           Search, Apply & <br /> Get Your{" "}
-          <span className="text-[#6A38C2]">Dream Jobs</span>
+          <span className="text-[#0d7cab]">Dream Jobs</span>
         </h1>
 
         {/* Subheading */}
@@ -36,16 +36,16 @@ const HeroSection = () => {
         </p>
 
         {/* Responsive Search Bar */}
-        <div className="flex flex-col sm:flex-row w-full sm:w-[90%] lg:w-[70%] shadow-lg border border-gray-200 px-4 py-3 rounded-full items-center gap-3 mx-auto">
+        <div className="flex flex-row w-full sm:w-[90%] lg:w-[55%] shadow-lg border border-gray-200 px-4 py-1.5 rounded-full items-center mx-auto">
           <input
             type="text"
             placeholder="Find your dream jobs"
             onChange={(e) => setQuery(e.target.value)}
-            className="outline-none border-none w-full text-sm sm:text-base px-3 py-2 rounded-full sm:rounded-none"
+            className="outline-none border-none flex-grow text-sm sm:text-base px-3 py-2 rounded-l-full"
           />
           <Button
             onClick={searchJobHandler}
-            className="rounded-full sm:rounded-r-full bg-[#6A38C2] px-6 py-3 flex items-center justify-center text-white"
+            className="bg-[#0d7cab] px-6 py-2 flex items-center justify-center text-white hover:bg-[#095c7a] transition-all duration-300 rounded-r-full h-auto"
           >
             <Search className="h-5 w-5" />
           </Button>

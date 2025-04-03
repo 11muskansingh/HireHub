@@ -64,8 +64,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
           },
         }
       );
-      console.log("Update time token", token);
-      console.log(response);
+      //onsole.log("Update time token", token);
+      //onsole.log(response);
       dispatch(setUser(response.data.data));
       setOpen(false);
       toast({
@@ -87,7 +87,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     <>
       <Dialog open={open}>
         <DialogContent
-          className="sm:max-w-[425px]"
+          className="w-full max-w-[90%] sm:max-w-[425px] mx-auto p-4 rounded-lg"
           onInteractOutside={() => setOpen(false)}
         >
           <DialogHeader>

@@ -47,7 +47,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="text-2xl font-bold">
           <Link to="/">
-            Hire<span className="text-[#6A38C2]">Hub</span>
+            Hire<span className="text-[#0d7cab]">Hub</span>
           </Link>
         </div>
 
@@ -126,7 +126,7 @@ const Navbar = () => {
                     </Link>
                     <Link to="/signup">
                       <Button
-                        className="bg-[#6A38C2] hover:bg-[#300875] w-full"
+                        className="bg-[#0d7cab] hover:bg-[#074763] w-full"
                         onClick={() => setIsMenuOpen(false)} // Close popover
                       >
                         Signup
@@ -195,7 +195,7 @@ const Navbar = () => {
                 <Button variant="outline">Login</Button>
               </Link>
               <Link to="/signup">
-                <Button className="bg-[#6A38C2] hover:bg-[#300875]">
+                <Button className="bg-[#0d7cab] hover:bg-[#074763]">
                   Signup
                 </Button>
               </Link>

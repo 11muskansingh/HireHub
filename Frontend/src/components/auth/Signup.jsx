@@ -117,7 +117,7 @@ const Signup = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      console.log(user);
+      //nsole.log(user);
       const token = await user.getIdToken();
 
       const formDataToSend = new FormData();
@@ -142,7 +142,7 @@ const Signup = () => {
         }
       );
       dispatch(setToken(token));
-      console.log(response);
+      //onsole.log(response);
       dispatch(setUser(response.data.data));
       navigate("/");
       toast({

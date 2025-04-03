@@ -16,8 +16,10 @@ const Browse = () => {
   return (
     <>
       <Navbar />
-      <div className="flex gap-5">
-        <div>Search Result({allJobs.length})</div>
+      <div className="flex gap-5 flex-col max-w-7xl mx-auto mt-5">
+        <div className="text-lg font-semibold">
+          Search Result({allJobs.length})
+        </div>
         <div className="h-[88vh] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
           {allJobs.map((job, index) => (
             <div

@@ -25,7 +25,7 @@ const JobDescription = () => {
   const getCurrJob = async () => {
     try {
       const response = await axiosInstance.get(`/jobs/${id}`);
-      console.log(response);
+      //onsole.log(response);
       dispatch(setSingleJob(response.data.data));
       setIsApplied(
         response.data.data.job?.applications?.some(
@@ -44,6 +44,7 @@ const JobDescription = () => {
   useEffect(() => {
     getCurrJob();
   }, [id, dispatch, user?._id]);
+
   useEffect(() => {
     setIsApplied(
       singleJob?.applications?.some((app) => app.applicant === user?._id)
@@ -80,8 +81,8 @@ const JobDescription = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto my-10">
-        <div className="flex items-center gap-4 mt-6">
+      <div className="max-w-7xl mx-auto my-10 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-center gap-4 mt-6">
           {singleJob?.company?.logo && (
             <img
               src={singleJob.company.logo}
@@ -89,12 +90,14 @@ const JobDescription = () => {
               className="h-16 w-16 object-cover"
             />
           )}
-          <h1 className="font-bold text-2xl">{singleJob?.company?.name}</h1>
+          <h1 className="font-bold text-2xl text-center sm:text-left">
+            {singleJob?.company?.name}
+          </h1>
         </div>
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col sm:flex-row items-center sm:justify-between mt-4 gap-4">
+          <div className="text-center sm:text-left">
             <h1 className="font-bold text-xl">{singleJob?.title}</h1>
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 mt-4">
               <Badge className={"text-blue-700 font-bold"} variant="ghost">
                 {singleJob?.postion} Positions
               </Badge>
@@ -102,7 +105,7 @@ const JobDescription = () => {
                 {singleJob?.jobType}
               </Badge>
               <Badge className={"text-[#7209b7] font-bold"} variant="ghost">
-                {singleJob?.salary}LPA
+                {singleJob?.salary} LPA
               </Badge>
             </div>
           </div>
@@ -149,7 +152,7 @@ const JobDescription = () => {
           <h1 className="font-bold my-1">
             Salary:{" "}
             <span className="pl-4 font-normal text-gray-800">
-              {singleJob?.salary}LPA
+              {singleJob?.salary} LPA
             </span>
           </h1>
           <h1 className="font-bold my-1">
@@ -161,9 +164,21 @@ const JobDescription = () => {
           <h1 className="font-bold my-1">
             Posted Date:{" "}
             <span className="pl-4 font-normal text-gray-800">
-              {singleJob?.createdAt.split("T")[0]}
+              {singleJob?.createdAt?.split("T")[0]}
             </span>
           </h1>
+          {singleJob?.requirements && Array.isArray(singleJob.requirements) && (
+            <div className="my-4">
+              <h1 className="font-bold my-1">Requirements:</h1>
+              <ul className="list-disc pl-8 text-gray-800">
+                {singleJob.requirements[0]
+                  .split(",") // Split the single string into an array of points
+                  .map((requirement, index) => (
+                    <li key={index}>{requirement.trim()}</li> // Trim extra spaces and render each point
+                  ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -48,7 +48,7 @@ const Login = () => {
 
       const user = userCredential.user;
       const token = await user.getIdToken();
-      console.log(token);
+      //nsole.log(token);
       const response = await axiosInstance.post(
         "/users/login",
         {
@@ -63,7 +63,7 @@ const Login = () => {
         }
       );
 
-      console.log(response);
+      //nsole.log(response);
       dispatch(setUser(response.data.data));
       toast({
         title: "Success",
