@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { auth } from "../../FireBase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import axiosInstance from "../../utils/axiosInstance.jsx";
+import axiosInstance from "../../utils/AxiosInstance.jsx";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import {
