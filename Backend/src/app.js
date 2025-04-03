@@ -3,13 +3,27 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.CORS_ORIGIN,
+//     credentials: true,
+//   })
+// );
 
+const corsOptions = {
+  origin: "https://hirehub-gz47.onrender.com",
+  methods: ["POST", "GET", "PUT", "DELETE", "PATCH"],
+  credentials: true, // allows cookies and authorization headers
+};
+
+// Apply CORS with the specified options
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight requests
+
+app.use(express.json({ limit: "20kb" }));
+app.use(express.urlencoded({ extended: true, limit: "20kb" }));
+app.use(express.static("public"));
+app.use(cookieParser());
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: true, limit: "20kb" }));
 app.use(express.static("public"));
