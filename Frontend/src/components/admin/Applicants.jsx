@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Navbar from "../shared/Navbar.jsx";
+import Navbar from "../Shared/Navbar.jsx";
 import ApplicantsTable from "./ApplicantsTable.jsx";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";

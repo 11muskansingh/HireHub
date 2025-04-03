@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { setLoading, setUser } from "@/redux/authslice";
+import { setLoading, setUser } from "@/redux/authslice.js";
 import axiosInstance from "@/utils/AxiosInstance";
 import { toast } from "@/hooks/use-toast";
 import { useToast } from "@/hooks/use-toast";

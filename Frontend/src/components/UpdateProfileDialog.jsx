@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
-import { setToken } from "@/redux/authslice";
+import { setToken } from "@/redux/authslice.js";
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
   const { loading, user, token } = useSelector((store) => store.auth);

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoading, setUser, setToken } from "@/redux/authslice";
-import store from "@/redux/store"; // Import the Redux store
+import store from "@/redux/store.js"; // Import the Redux store
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3000/api/v1", // Update with your backend URL

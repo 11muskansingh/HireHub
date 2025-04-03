@@ -1,4 +1,4 @@
-import { setAllAdminJobs } from "@/redux/jobSlice";
+import { setAllAdminJobs } from "@/redux/jobSlice.js";
 import axiosInstance from "@/utils/AxiosInstance.jsx";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";

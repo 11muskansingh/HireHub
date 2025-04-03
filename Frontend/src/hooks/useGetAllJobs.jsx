@@ -1,7 +1,7 @@
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setAllJobs, setSearchedQuery } from "@/redux/jobSlice";
+import { setAllJobs, setSearchedQuery } from "@/redux/jobSlice.js";
 
 const useGetAllJobs = () => {
   const dispatch = useDispatch();

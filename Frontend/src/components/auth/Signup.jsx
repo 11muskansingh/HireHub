@@ -16,7 +16,7 @@ import {
 } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser, setToken } from "@/redux/authslice";
+import { setLoading, setUser, setToken } from "@/redux/authslice.js";
 import { Loader2 } from "lucide-react";
 const Signup = () => {
   const googleProvider = new GoogleAuthProvider();

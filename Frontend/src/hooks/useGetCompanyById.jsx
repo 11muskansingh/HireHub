@@ -1,7 +1,7 @@
-import axiosInstance from "@/utils/AxiosInstance";
+import axiosInstance from "@/utils/AxiosInstance.jsx";
 import { useEffect } from "react"; // Ensure useEffect is imported from React
 import { useDispatch } from "react-redux";
-import { setSingleCompany } from "@/redux/companySlice";
+import { setSingleCompany } from "@/redux/companySlice.js";
 
 const useGetCompanyById = (companyId) => {
   const dispatch = useDispatch();
