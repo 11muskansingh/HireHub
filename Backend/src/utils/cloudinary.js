@@ -1,7 +1,9 @@
 //We will assume that the files are already stored temporarily on our server. We are following the next steps.
 
-import { v2 as cloudinary } from "cloudinary";
-import fs from "fs"; //file system
+import cloudinaryPkg from "cloudinary"; // Import the default export
+const { v2: cloudinary } = cloudinaryPkg; // Destructure v2
+
+import fs from "fs"; // File system
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
