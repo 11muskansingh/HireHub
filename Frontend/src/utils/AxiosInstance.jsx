@@ -4,7 +4,7 @@ import { setLoading, setUser, setToken } from "@/redux/authslice";
 import store from "@/redux/store.js"; // Import the Redux store
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/v1", // Update with your backend URL
+  baseURL: "https://hirehub-backend-o059.onrender.com/api/v1", // Update with your backend URL
   headers: {
     "Content-Type": "application/json",
   },
