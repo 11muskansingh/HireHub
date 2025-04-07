@@ -1,7 +1,7 @@
 # 🚀 HireHub – Job Hunt Platform
 
 [![Frontend](https://img.shields.io/badge/Frontend-Deployed-green)](https://hirehub-gz47.onrender.com)  
-[![Backend](https://img.shields.io/badge/Backend-Deployed-blue)](https://dashboard.render.com/web/srv-cvnblhqdbo4c73bhq0c0)
+[![Backend](https://img.shields.io/badge/Backend-Deployed-blue)](https://hirehub-backend-o059.onrender.com)
 
 HireHub is a full-stack job portal designed to simplify the job search and hiring process. With role-based access, real-time updates, and a responsive UI, it connects **recruiters** and **job seekers** in a seamless hiring ecosystem.
 
